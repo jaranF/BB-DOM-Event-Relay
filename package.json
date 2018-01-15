@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A way of proxying global DOM window events into Backbone's Views via listenTo",
   "main": "main.js",
-  "repository": "https://github.com/jaranF/BB-DOMEvent-Proxier.git",
+  "repository": "https://github.com/jaranF/BB-DOM-Event-Relay.git",
   "author": "JaranF <JaranMclarn@gmail.com>",
   "license": "MIT",
   "dependencies": {
