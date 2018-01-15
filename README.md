@@ -6,10 +6,10 @@ Brings global Window Events (i.e. like 'scroll', 'blur') into the realm of Backb
 
 The use case for this code is to overcome the restrictions BackboneJS places on the programmer when it comes to listening for a DOM Event that falls outside the narrow remit of being on an element at the top level of a view (i.e. it's `this.el`) or a child thereof. Say for instance your view presents data in a table and you want a 'sticky heaer' for the table's header row (relies on the window.onScroll event). This presents a few problems if you want to do so and still play by the BackboneJS rulebook:
 
-1\ As with the usual view DOM Events defined in the `events` hash, you want BackboneJS to automatically detach those events when the view is removed.
-2\ To do the above, you also don't want to complicate things by having to override BackboneJS's native `remove()` method which would be the case if you just hooked up the event listener in your view's `initialize` method using a plain old jQuery `on()` call.
-3\ Although it's possible to do, circumventing the mechanisms BackboneJS provides you with when it comes to attaching and de-coupling events feels hacky and you want to stick with the BackboneJS paradigms.
-4\ You tried to integrate the DOM object you want to listen to into BackboneJS world by mixing it in with `Backbone.Events`. Believe me, this one of the first things I tried `myview.listenTo(_(window).extend(Backbone.Events), 'scroll', myView.handler);` ... if it had worked I would not have had to write this code ; )
+1. As with the usual view DOM Events defined in the `events` hash, you want BackboneJS to automatically detach those events when the view is removed.
+2. To do the above, you also don't want to complicate things by having to override BackboneJS's native `remove()` method which would be the case if you just hooked up the event listener in your view's `initialize` method using a plain old jQuery `on()` call.
+3. Although it's possible to do, circumventing the mechanisms BackboneJS provides you with when it comes to attaching and de-coupling events feels hacky and you want to stick with the BackboneJS paradigms.
+4. You tried to integrate the DOM object you want to listen to into BackboneJS world by mixing it in with `Backbone.Events`. Believe me, this one of the first things I tried `myview.listenTo(_(window).extend(Backbone.Events), 'scroll', myView.handler);` ... if it had worked I would not have had to write this code ; )
 
 ## Usage
 For a quick try out see [jsFiddle Example](https://fiddle.jshell.net/jaranF/dqwcxtkm/show/light/). You will need to shorten your viewport so its not tall enough to display the page and thereby make the sticky headers do their thing. If you have your console open you will also see how the view receives the window.onscroll event notifications.
@@ -20,8 +20,7 @@ For a quick try out see [jsFiddle Example](https://fiddle.jshell.net/jaranF/dqwc
      {
       ...  standard View stuff ...
      }, makeEventPipe());
-
-
+```
 
 And within your view when you want to hook up the DOM event to relay (say for instance in the `initialize()` method:
 
@@ -32,6 +31,8 @@ And within your view when you want to hook up the DOM event to relay (say for in
     initialize: function() {
        this.constructor.eventPipe.listenTo.call(this, window, 'scroll', this.handleScroll);
      },);
+```
+
 
 ## Using The Code & Getting The Unit Tests Up And Running
 The code is in 'main.js' and makes no assumptions other than the usual (that BackboneJS, Underscore and jQuery are present). NodeJS and Yarn are also required to run the unit tests. On that subject, the commands below are good for Mac Terminal or Git Shell Command Line.
