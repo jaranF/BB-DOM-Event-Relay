@@ -74,9 +74,7 @@ function makeEventRelayer() {
   publicAPI.listenTo = _listenTo;
   publicAPI.listenToOnce = _listenToOnce;
   publicAPI.stopListening = _stopListening;
-  return {
-    eventRelayer: publicAPI
-  };
+  return publicAPI;
 
 }  // End fn 'makeEventRelayer()'
 
