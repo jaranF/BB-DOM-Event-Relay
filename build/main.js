@@ -75,10 +75,10 @@ function makeEventRelayer() {
   publicAPI.listenToOnce = _listenToOnce;
   publicAPI.stopListening = _stopListening;
   return {
-    eventPipe: publicAPI
+    eventRelayer: publicAPI
   };
 
-}  // End fn 'makeEventPipe()'
+}  // End fn 'makeEventRelayer()'
 
 myApp.makeEventRelayer = makeEventRelayer;
 
