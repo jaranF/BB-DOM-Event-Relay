@@ -41,13 +41,13 @@ describe('DOM Object Event Proxy ', function () {
   var fnOriginalUnreflectedFunction = null;
   var myView;
   var eventPipe;
-  // console.log(myApp.makeEventPipe().eventPipe);
+  // console.log(myApp.makeEventRelayer().eventPipe);
 
   beforeEach(function () {
     myView = new Backbone.View();
-    eventPipe = myApp.makeEventPipe().eventPipe;
+    eventPipe = myApp.makeEventRelayer().eventPipe;
     if (fnOriginalUnreflectedFunction === null) {
-      fnOriginalUnreflectedFunction = myApp.makeEventPipe;
+      fnOriginalUnreflectedFunction = myApp.makeEventRelayer;
     }
     Function.prototype.reflect = function (reflectionDefinition) {
       Function.prototype.reflect = reflectionDefinition;
@@ -58,27 +58,27 @@ describe('DOM Object Event Proxy ', function () {
     myView.remove();
     myView = eventPipe = void 0;
     delete Function.prototype.reflect;
-    myApp.makeEventPipe = fnOriginalUnreflectedFunction;
+    myApp.makeEventRelayer = fnOriginalUnreflectedFunction;
   });
 
   it('should be return it\'s API on a returned Object type', function () {
-    var result = myApp.makeEventPipe();
+    var result = myApp.makeEventRelayer();
     expect(result).toEqual(jasmine.any(Object));
   });
   it('should define \'listenTo\' as part of it\'s API', function () {
-    var result = myApp.makeEventPipe();
+    var result = myApp.makeEventRelayer();
     expect(result.eventPipe.listenTo).toEqual(jasmine.any(Function));
   });
   it('should define \'stopListening\' as part of it\'s API', function () {
-    var result = myApp.makeEventPipe();
+    var result = myApp.makeEventRelayer();
     expect(result.eventPipe.stopListening).toEqual(jasmine.any(Function));
   });
   it('should define \'listenToOnce()\' as part of it\'s API', function () {
-    var result = myApp.makeEventPipe();
+    var result = myApp.makeEventRelayer();
     expect(result.eventPipe.listenToOnce).toEqual(jasmine.any(Function));
   });
   it('should inherit from Backbone.Events', function () {
-    var result = myApp.makeEventPipe();
+    var result = myApp.makeEventRelayer();
     expect(Object.getPrototypeOf(result.eventPipe.__super)).toEqual(Backbone.Events);
   });
 
@@ -90,12 +90,13 @@ describe('DOM Object Event Proxy ', function () {
       var myVanillaView = new Backbone.View();
       expect(myVanillaView.listenTo).toEqual(nativeListenToOriginal);
       expect(_(myView.listenTo).has()).toEqual(false);
+
     });
     it('should not change the native Backbone.Events \'stopListening()\' method in any way (rather set a temporary proxy-ing \'stopListening()\' directly on the View instance', function () {
       var nativeStopListeningOriginal = Backbone.Events.stopListening;
-      myApp.makeEventPipe = exposePrivateFunctions(myApp.makeEventPipe);
-      var eventPipe = myApp.makeEventPipe().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
-      var inner_stopListening = myApp.makeEventPipe.reflect._stopListening;
+      myApp.makeEventRelayer = exposePrivateFunctions(myApp.makeEventRelayer);
+      var eventPipe = myApp.makeEventRelayer().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
+      var inner_stopListening = myApp.makeEventRelayer.reflect._stopListening;
       eventPipe.listenTo.call(myView, window, 'resize', myView.render);
       expect(Backbone.Events.stopListening).toEqual(nativeStopListeningOriginal);
       var myVanillaView = new Backbone.View();
@@ -136,9 +137,9 @@ describe('DOM Object Event Proxy ', function () {
       function mockHandler() {
         return void 0;
       }
-      myApp.makeEventPipe = exposePrivateFunctions(myApp.makeEventPipe);
-      void myApp.makeEventPipe().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
-      var inner_removeDOMEventListener = myApp.makeEventPipe.reflect.removeDOMEventListener;
+      myApp.makeEventRelayer = exposePrivateFunctions(myApp.makeEventRelayer);
+      void myApp.makeEventRelayer().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
+      var inner_removeDOMEventListener = myApp.makeEventRelayer.reflect.removeDOMEventListener;
       var spyOff = sinon.spy(jQuery.fn, 'off');
 
       void inner_removeDOMEventListener(window, 'blur', mockHandler);
@@ -149,9 +150,9 @@ describe('DOM Object Event Proxy ', function () {
 
   describe('\'_getProxyListeners\' (internal function)', function() {
     it('should return an array', function() {
-      myApp.makeEventPipe = exposePrivateFunctions(myApp.makeEventPipe);
-      void myApp.makeEventPipe().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
-      var inner_getProxyListeners = myApp.makeEventPipe.reflect._getProxyListeners;
+      myApp.makeEventRelayer = exposePrivateFunctions(myApp.makeEventRelayer);
+      void myApp.makeEventRelayer().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
+      var inner_getProxyListeners = myApp.makeEventRelayer.reflect._getProxyListeners;
       expect(inner_getProxyListeners()).toEqual(jasmine.any(Array));
     });
 
@@ -168,9 +169,9 @@ describe('DOM Object Event Proxy ', function () {
     });
     it('should not change the native Backbone.Events \'stopListening()\' method (rather set a temporary proxy-ing \'stopListening()\' directly on the View instance', function () {
       var nativeStopListeningOriginal = Backbone.Events.stopListening;
-      myApp.makeEventPipe = exposePrivateFunctions(myApp.makeEventPipe);
-      var eventPipe = myApp.makeEventPipe().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
-      var inner_stopListening = myApp.makeEventPipe.reflect._stopListening;
+      myApp.makeEventRelayer = exposePrivateFunctions(myApp.makeEventRelayer);
+      var eventPipe = myApp.makeEventRelayer().eventPipe; //Required to make the reflection of the inner...private scope function to occur.
+      var inner_stopListening = myApp.makeEventRelayer.reflect._stopListening;
       eventPipe.listenToOnce.call(myView, window, 'resize', myView.render);
       expect(Backbone.Events.stopListening).toEqual(nativeStopListeningOriginal);
       var myVanillaView = new Backbone.View();

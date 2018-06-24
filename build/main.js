@@ -1,5 +1,5 @@
 var myApp = myApp || {};
-function makeEventPipe() {
+function makeEventRelayer() {
   'use strict';
   var publicAPI = {__super: Object.create(Backbone.Events)};
 
@@ -80,7 +80,7 @@ function makeEventPipe() {
 
 }  // End fn 'makeEventPipe()'
 
-myApp.makeEventPipe = makeEventPipe;
+myApp.makeEventRelayer = makeEventRelayer;
 
 
 

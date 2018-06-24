@@ -66,7 +66,7 @@ Also, the API to deliver the event relaying versions of 'listenTo()', 'stopListe
 
 | Issue #       | Description                                                   |
 | :-----------: |:--------------------------------------------------------------|
-|      1        | Rename S & R (i.e. word 'pipe' is misleading)                 |
+|      1        | ~~Rename S & R (i.e. word 'pipe' is misleading)~~                 |
 |      2        | Streamline API so access through 'eventPipe' unnecessary      |
 |      3        | Don't inject it statically on View class constructor          |
 |      4        | 'stopListening()' removes corollary memozied event definition |
