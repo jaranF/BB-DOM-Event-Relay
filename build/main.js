@@ -21,7 +21,7 @@ function makeEventRelayer() {
     }
     doOnceOnly = _(doOnceOnly).isUndefined() ? false : doOnceOnly;
     $(domObj)['on' + (doOnceOnly ? 'e' : '')](sEvtName, fnProxyToDOMEvent);
-    // domObj.addEventListener(sEvtName, fnProxyToDOMEvent, false);
+
     var proxySignature = {};
     proxySignature[_.uniqueId('_lp')] = {_domObj: domObj, _sEvtName: sEvtName, _fnHandler: fnHandler, domHandler: fnProxyToDOMEvent};
     _getProxyListeners().push(proxySignature);
@@ -33,7 +33,7 @@ function makeEventRelayer() {
 
   function _listenToOnce(domObj, sEvtName, fnHandler) {
     return _listenTo.call(this, domObj, sEvtName, fnHandler, true);
-  }  //end publicAPI.listenToOnce
+  }
 
   function removeDOMEventListener(domObj, sEventName, fnHandlerCallback) {
     $(domObj).off(sEventName, fnHandlerCallback);
