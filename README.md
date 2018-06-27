@@ -65,7 +65,7 @@ This code creates special versions of `listenTo()`, `listenToOnce()` and `stopLi
 |      1        | ~~Rename S & R (i.e. word 'pipe' is misleading)~~                 |
 |      2        | ~~Streamline API so access through 'eventRelayer' unnecessary~~   |
 |      3        | Don't inject it statically on View class constructor          |
-|      4        | 'stopListening()' removes corollary memozied event definition |
+|      4        | ~~'stopListening()' removes corollary memozied event definition~~ |
 
 
 

@@ -45,24 +45,30 @@ function makeEventRelayer() {
     objListenedTo = _.isUndefined(objListenedTo) ? null : objListenedTo;
     sEvtName = _.isUndefined(sEvtName) ? null : sEvtName;
     fnCallback = _.isUndefined(fnCallback) ? null : fnCallback;
+    var arrProxiedListeners = _getProxyListeners();
+    var arrOfFoundMemoizedEventIndexes = [];
     var bFoundMemoizedProxiedEvent = false;
     var me = this;
-    _(_getProxyListeners()).each(function(item) {
+    _(arrProxiedListeners).each(function(item, index) {
       var uniqueId = _(item).keys()[0];
       var objListenedToMemoized = item[uniqueId]._domObj;
       var sEvtNameMemoized = item[uniqueId]._sEvtName;
       var fnHandlerMemoized = item[uniqueId]._fnHandler;
       if (objListenedTo === null) {
         removeDOMEventListener(objListenedToMemoized, sEvtNameMemoized, item[uniqueId].domHandler);
+        arrOfFoundMemoizedEventIndexes.push(index);
       }
       else if (objListenedTo === objListenedToMemoized && (sEvtName === sEvtNameMemoized || sEvtName === null) && (fnCallback === fnHandlerMemoized || fnCallback === null)) {
         bFoundMemoizedProxiedEvent = true;
         removeDOMEventListener(objListenedToMemoized, sEvtNameMemoized, item[uniqueId].domHandler);
+        arrOfFoundMemoizedEventIndexes.push(index);
       }
 
     });
-    // TODO everytime a match is found with the memoized domproxy events where in proxyListeners it must be deleted out of the proxyListeners array
-    // Otherwise it is only Garbage Collected whent he view is destroyed. No biggie but worth baring in mind
+    arrOfFoundMemoizedEventIndexes.reverse();
+    _(arrOfFoundMemoizedEventIndexes).each(function(iIndexItem) {
+      arrProxiedListeners.splice(iIndexItem, 1);
+    });
 
     if (!bFoundMemoizedProxiedEvent) {
       // No args were supplied to 'stopListening()' or args were supplied but it wasn't for a proxied event (i.e. just normal BackboneJs 'listenTo' API

@@ -284,5 +284,48 @@ describe('DOM Object Event Proxy ', function () {
       expect(stubTitleChanged.called).toBeFalsy();
       expect(stubFocusedOut.called).toBeFalsy();
     });
+    it('should removed the internally stored memoized listener when \'stopListening\' removes said \'relay\' listener', function () {
+      myApp.makeEventRelayer = exposePrivateFunctions(myApp.makeEventRelayer);
+      eventRelayer = myApp.makeEventRelayer()
+      var inner_getProxyListeners = myApp.makeEventRelayer.reflect._getProxyListeners;
+      viewWithModel.titleChanged = function() {
+        void 0;
+      };
+      viewWithModel.focusedOut = function() {
+        void 0;
+      };
+      viewWithModel.resizedWin = function() {
+        void 0;
+      }
+      var stubTitleChanged = sinon.stub(viewWithModel, 'titleChanged');
+      viewWithModel.listenTo(model, 'change', viewWithModel.titleChanged);
+      eventRelayer.listenTo.call(viewWithModel, window, 'blur', viewWithModel.focusedOut);
+      eventRelayer.listenTo.call(viewWithModel, window, 'resize', viewWithModel.resizedWin);
+      expect(inner_getProxyListeners().length).toEqual(2);
+      viewWithModel.stopListening(window, 'blur', viewWithModel.focusedOut); //
+      expect(inner_getProxyListeners().length).toEqual(1);
+      model.set('title', 'go shopping');
+      expect(stubTitleChanged.called).toBeTruthy();
+    });
+    it('should remove all the internally stored memoized listeners when \'stopListening\' removes all listeners via \'view.remove\'', function () {
+      myApp.makeEventRelayer = exposePrivateFunctions(myApp.makeEventRelayer);
+      eventRelayer = myApp.makeEventRelayer()
+      var inner_getProxyListeners = myApp.makeEventRelayer.reflect._getProxyListeners;
+      viewWithModel.titleChanged = function() {
+        void 0;
+      };
+      viewWithModel.focusedOut = function() {
+        void 0;
+      };
+      viewWithModel.resizedWin = function() {
+        void 0;
+      }
+      viewWithModel.listenTo(model, 'change', viewWithModel.titleChanged);
+      eventRelayer.listenTo.call(viewWithModel, window, 'blur', viewWithModel.focusedOut);
+      eventRelayer.listenTo.call(viewWithModel, window, 'resize', viewWithModel.resizedWin);
+      expect(inner_getProxyListeners().length).toEqual(2);
+      viewWithModel.remove();
+      expect(inner_getProxyListeners().length).toEqual(0);
+    });
   });
 });
