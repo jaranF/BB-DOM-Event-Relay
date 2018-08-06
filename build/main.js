@@ -1,7 +1,7 @@
 var myApp = myApp || {};
 function makeEventRelayer() {
-  'use strict';
-  var publicAPI = {__super: Object.create(Backbone.Events)};
+  "use strict";
+  var publicAPI = { __super: Object.create(Backbone.Events) };
 
   var proxyListeners = [];
 
@@ -16,14 +16,23 @@ function makeEventRelayer() {
     var fnProxyToDOMEvent = function() {
       fnHandler.apply(me, Array.prototype.slice.call(arguments, 0));
     };
-    if (_.isUndefined(domObj) || _.isUndefined(sEvtName) || _.isUndefined(fnHandler)) {
+    if (
+      _.isUndefined(domObj) ||
+      _.isUndefined(sEvtName) ||
+      _.isUndefined(fnHandler)
+    ) {
       return;
     }
     doOnceOnly = _(doOnceOnly).isUndefined() ? false : doOnceOnly;
-    $(domObj)['on' + (doOnceOnly ? 'e' : '')](sEvtName, fnProxyToDOMEvent);
+    $(domObj)["on" + (doOnceOnly ? "e" : "")](sEvtName, fnProxyToDOMEvent);
 
     var proxySignature = {};
-    proxySignature[_.uniqueId('_lp')] = {_domObj: domObj, _sEvtName: sEvtName, _fnHandler: fnHandler, domHandler: fnProxyToDOMEvent};
+    proxySignature[_.uniqueId("_lp")] = {
+      _domObj: domObj,
+      _sEvtName: sEvtName,
+      _fnHandler: fnHandler,
+      domHandler: fnProxyToDOMEvent
+    };
     _getProxyListeners().push(proxySignature);
     me.stopListening = _stopListening; // This is crucial OVERRIDE the usual BackboneJS native 'stopListening()' by setting it on the
     // instance of the view. The clever thing is that doing it this way you know that this special 'stopListening()' doesn't effect
@@ -55,15 +64,25 @@ function makeEventRelayer() {
       var sEvtNameMemoized = item[uniqueId]._sEvtName;
       var fnHandlerMemoized = item[uniqueId]._fnHandler;
       if (objListenedTo === null) {
-        removeDOMEventListener(objListenedToMemoized, sEvtNameMemoized, item[uniqueId].domHandler);
+        removeDOMEventListener(
+          objListenedToMemoized,
+          sEvtNameMemoized,
+          item[uniqueId].domHandler
+        );
         arrOfFoundMemoizedEventIndexes.push(index);
-      }
-      else if (objListenedTo === objListenedToMemoized && (sEvtName === sEvtNameMemoized || sEvtName === null) && (fnCallback === fnHandlerMemoized || fnCallback === null)) {
+      } else if (
+        objListenedTo === objListenedToMemoized &&
+        (sEvtName === sEvtNameMemoized || sEvtName === null) &&
+        (fnCallback === fnHandlerMemoized || fnCallback === null)
+      ) {
         bFoundMemoizedProxiedEvent = true;
-        removeDOMEventListener(objListenedToMemoized, sEvtNameMemoized, item[uniqueId].domHandler);
+        removeDOMEventListener(
+          objListenedToMemoized,
+          sEvtNameMemoized,
+          item[uniqueId].domHandler
+        );
         arrOfFoundMemoizedEventIndexes.push(index);
       }
-
     });
     arrOfFoundMemoizedEventIndexes.reverse();
     _(arrOfFoundMemoizedEventIndexes).each(function(iIndexItem) {
@@ -73,7 +92,12 @@ function makeEventRelayer() {
     if (!bFoundMemoizedProxiedEvent) {
       // No args were supplied to 'stopListening()' or args were supplied but it wasn't for a proxied event (i.e. just normal BackboneJs 'listenTo' API
       // event so pass the args thru to the native 'stopListening()' method.
-      return publicAPI.__super.stopListening.call(me, objListenedTo, sEvtName, fnCallback);
+      return publicAPI.__super.stopListening.call(
+        me,
+        objListenedTo,
+        sEvtName,
+        fnCallback
+      );
     }
   } //end publicAPI.stopListeningTo
 
@@ -81,10 +105,6 @@ function makeEventRelayer() {
   publicAPI.listenToOnce = _listenToOnce;
   publicAPI.stopListening = _stopListening;
   return publicAPI;
-
-}  // End fn 'makeEventRelayer()'
+} // End fn 'makeEventRelayer()'
 
 myApp.makeEventRelayer = makeEventRelayer;
-
-
-
